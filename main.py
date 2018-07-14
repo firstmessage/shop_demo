@@ -1,6 +1,7 @@
 #bot600954501:AAE9GxvpjuY-xEaNndVlapf6_UzgdKKMEWU
 
 import requests
+from time import sleep
 
 #входные переменные 
 token="bot600954501:AAE9GxvpjuY-xEaNndVlapf6_UzgdKKMEWU"
@@ -49,6 +50,7 @@ def send_bot_sessage(chat_id, text):
     if (not result.status_code == 200): # проверим статус пришедшего ответа
         return False
 
+    #print (result.json())
     decoded = result.json()
     return decoded
 
@@ -65,16 +67,24 @@ def get_bot_exchenge(doll):
         return False
         
 
-    #print (result)
+    #print (result.status_code)
     if not result.status_code == 200: # проверим статус пришедшего ответа
         return False
     
-     
-    if (result.json()['success']==True) : 
-        return result.json()['ticker']['price']
-    else :
+    try:
+        decode=result.json()
+        if (decode['success']==True) : 
+            return decode['ticker']['price']
+        else :
+            return 'ошибка запроса, попробуйте еще раз позже'
+
+    except:
+        print('get EX error')
         return 'ошибка запроса, попробуйте еще раз позже'
 
+    
+     
+    
 
 #print(result) 
   
@@ -113,6 +123,8 @@ while True:
     except KeyboardInterrupt: # порождается, если бота остановил пользователь
         print('Interrupted by the user')
         break
+    
+    sleep(0.5)
 
 
     

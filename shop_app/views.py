@@ -5,6 +5,13 @@ from django.shortcuts import render
 # импортируем из стандартной сборки Django
 from django.http import HttpResponse 
 
+# импортируем модель для CBV            
+from django.views import generic 
+
+# импортируем нашу модель
+from .models import Product, Category
+#from .models import 
+
 # Стандартный вью — это обычная питон-функция, которая получает аргумент request
 def index(request):
     request_method = request.method
@@ -15,13 +22,6 @@ def index(request):
     response_text = "Тип запроса: {}. IP-адрес: {}. ЮзерАгент: {}".format(request_method, ip_address, browser_info)
     
     return HttpResponse(response_text)
-
-# импортируем модель для CBV            
-from django.views import generic 
-
-# импортируем нашу модель
-from .models import Product, Category
-#from .models import 
 
 class ProductListView(generic.ListView): 
     template_name = 'products_list.html' # подключаем наш Темплейт

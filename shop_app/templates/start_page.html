@@ -1,3 +1,12 @@
+{% if user.is_authenticated %} 
+	<p>Привет, {{ user.username }}!</p>
+  <p><a href="{% url 'logout' %}">Выйти</a></p>
+{% else %} 
+	<p>You are not logged in.</p>
+  <a href="{% url 'login' %}">Войти</a> 
+  <a href="{% url 'SignUp' %}">загеристрироваться</a> 
+{% endif %}
+
 <h2>
 {% for category in сategories %} 
   <a href="category/{{category.id}}">{{category.title}}</a>, 
@@ -6,7 +15,7 @@
 
 {% for category in сategories %} 
   {% for product in category.products.all %}
-    <h3><a href="product/{{product.id}}">{{product.title}}</a></h3>
+    <h3><a href="{% url 'product_detail' product.id %}">{{product.title}}</a></h3>
     <p>{{ product.description}}</p>
     {% endfor %}     
 {% endfor %} 

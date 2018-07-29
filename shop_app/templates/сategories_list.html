@@ -2,3 +2,8 @@
   <h2>{{category.title}}</h2>
   <p>{{category.description}}</p>
 {% endfor %} 
+
+<p><a href="{% url 'index' %}">на главную</a></p>
+
+<p><a href="{% url 'product_create' %}">добавить продукт</a></p>
+

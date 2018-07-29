@@ -9,8 +9,15 @@ from django.http import HttpResponse
 from django.views import generic 
 
 # импортируем нашу модель
-from .models import Product, Category
-#from .models import 
+from .models import Product, Category, Order
+
+#создание формы
+from django.contrib.auth.forms import UserCreationForm 
+
+from django.urls import reverse_lazy
+
+# загрузка миксина для требования логина для просмотра
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 # Стандартный вью — это обычная питон-функция, которая получает аргумент request
 def index(request):
@@ -53,3 +60,54 @@ class StartPage(generic.ListView):
     context_object_name = 'сategories' # под каким именем передадутся данные в Темплейт
     model = Category # название Модели
 
+class ProductCreate(generic.CreateView): 
+	model = Product 
+	# название нашего шаблона с формой
+	template_name = 'product_new.html' 
+	# какие поля будут в форме 
+	fields = '__all__'
+
+class ProductUpdate(generic.UpdateView): 
+	model = Product 
+	# название нашего шаблона с формой
+	template_name = 'product_update.html' 
+	# какие поля будут в форме 
+	fields = '__all__'
+
+class ProductDelete(generic.DeleteView): 
+	model = Product 
+	# название нашего шаблона с формой
+	template_name = 'product_delete.html' 
+	# в случае успеха куда перейдет 
+	success_url = reverse_lazy('index')
+
+class OrderFormView(LoginRequiredMixin, generic.CreateView): 
+    model = Order 
+    template_name = 'order_form.html' 
+    success_url = '/' 
+    # выведем только поля, которые нужно заполнить самому человеку
+    fields = ['customer_name', 'customer_phone']
+
+    def form_valid(self, form):
+        # получаем ID из ссылки и передаем в ORM для фильтрации
+        product = Product.objects.get(id=self.kwargs['pk']) 
+        #получаем пользователя
+        user = self.request.user 
+        email = self.request.email
+        # передаем в поле товара нашей формы отфильтрованный товар
+        form.instance.product = product 
+        form.instance.user = user 
+        form.instance.email = email 
+        # super — перезагружает форму, нужен для работы
+        return super().form_valid(form)
+    
+    def get_context_data(self, **kwargs): 
+        context = super().get_context_data(**kwargs)
+        # передаем в словарь контекста список всех категорий 
+        context['product'] = Product.objects.get(id=self.kwargs['pk']) 
+        return context
+
+class SignUpView(generic.CreateView): 
+    form_class = UserCreationForm 
+    success_url = reverse_lazy('login') 
+    template_name = 'registration/signup.html'

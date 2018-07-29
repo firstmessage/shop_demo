@@ -15,18 +15,31 @@ Including another URLconf
 """
 # стандартный вью для админки
 from django.contrib import admin
+#from django.contrib.auth import authenticate, login
 # модуль Джанго для определения URL'ов
 from django.urls import path 
 # импортируем наш файл views из shop_app
 from shop_app import views 
+from django.conf.urls import include
 
 # говорим Джанго о том, что хотим отображать наш вью на главной странице
 # а строчкой ниже, кстати ссылка на нашу админку, про нее позже
 urlpatterns = [ 
-  path('', views.StartPage.as_view(),name='index'), 
-  path('product/<int:pk>/', views.ProductDetail.as_view(), name='detail'),
-  path('category/<int:pk>/', views.CategoryDetail.as_view(), name='CategoryDetail'),
+    #ссылка на логин и так далее LoginView, LogoutView и другие.
+    path('accounts/', include('django.contrib.auth.urls')),
+    path('accounts/SignUp', views.SignUpView.as_view(), name='SignUp'),
+    #ссылка на форму заказа 
+    path('products/<int:pk>/order', views.OrderFormView.as_view(), name='product_order'),
+# наш View для конкретного продукта из прошлого урока
+    path('products/<int:pk>', views.ProductDetail.as_view(), name='product_detail'),
+# добавляем новую строчку в urlpatterns
+    path('products/new/', views.ProductCreate.as_view(), name='product_create'), 
+    path('products/<int:pk>/update/', views.ProductUpdate.as_view(), name='product_update'), 
+    path('products/<int:pk>/del/', views.ProductDelete.as_view(), name='product_delete'), 
+    path('', views.StartPage.as_view(),name='index'), 
+#    path('product/<int:pk>/', views.ProductDetail.as_view(), name='detail'),
+     path('category/<int:pk>/', views.CategoryDetail.as_view(), name='CategoryDetail'),
 #  path('product/', views.ProductListView.as_view(),name='products'), 
 #  path('category/', views.CategoryListView.as_view(),name='category'), 
-  path('admin/', admin.site.urls), 
+    path('admin/', admin.site.urls), 
 ]

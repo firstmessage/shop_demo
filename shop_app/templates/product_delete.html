@@ -1,0 +1,8 @@
+<h1>удаляем товар Товар</h1>
+<h2>{{product.title}}</h2>
+  {# action — ссылка куда отправляется запрос, method - метод запроса #}
+  <form action="" method="post" enctype="multipart/form-data">
+    {% csrf_token %} 
+    <p>Are you sure you want to delete "{{ object }}"?</p>
+    <input type="submit" value="Подтвердить" /> 
+  </form>

@@ -1,3 +1,17 @@
 <h2>{{product.title}}</h2> 
 <h3><a href="/category/{{product.category.id}}">{{product.category.title}}</a></h3>
 <p>{{product.description}}</p>
+
+{% if user.is_authenticated %} 
+
+{% else %} 
+	<p>чтобы заказать: </p>
+  <a href="{% url 'login' %}">Войти</a> 
+  <a href="{% url 'SignUp' %}">загеристрироваться</a> 
+{% endif %}
+
+<button><a href="{% url 'product_order' product.id %}">Заказать</a></button>
+
+<p><a href="{% url 'product_update' product.id %}">изменить</a> 
+<a href="{% url 'product_delete' product.id %}">удалить</a></p>
+<p><a href="{% url 'index' %}">на главную</a></p>
